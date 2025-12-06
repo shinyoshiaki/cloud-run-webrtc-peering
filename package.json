@@ -1,0 +1,42 @@
+{
+  "name": "cloud-run-webrtc-peering",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cloud Run WebRTC Peering Monorepo",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter @cloud-run-webrtc-peering/server dev",
+    "dev:client": "pnpm --filter @cloud-run-webrtc-peering/client dev",
+    "build:client": "pnpm --filter @cloud-run-webrtc-peering/client build",
+    "lint": "biome check --write packages",
+    "docker:build:app": ". ./.env && docker build -f cr-service/server/Dockerfile -t ${APP_DOCKER:-$DOCKER} .",
+    "docker:push:app": ". ./.env && docker push ${APP_DOCKER:-$DOCKER}",
+    "docker:deploy:app": "run-s docker:build:app docker:push:app",
+    "docker:build:cr-service": ". ./.env && docker build -f cr-jobs/service/Dockerfile -t ${JOBS_SERVICE_DOCKER:-$DOCKER_CR_SERVICE} .",
+    "docker:push:cr-service": ". ./.env && docker push ${JOBS_SERVICE_DOCKER:-$DOCKER_CR_SERVICE}",
+    "docker:deploy:cr-service": "run-s docker:build:cr-service docker:push:cr-service",
+    "docker:run:cr-service": ". ./.env && docker run ${JOBS_SERVICE_DOCKER:-$DOCKER_CR_SERVICE}",
+    "docker:build:cr-job": ". ./.env && docker build -f cr-jobs/job/Dockerfile -t ${JOBS_JOB_DOCKER:-$DOCKER_CR_JOB} .",
+    "docker:push:cr-job": ". ./.env && docker push ${JOBS_JOB_DOCKER:-$DOCKER_CR_JOB}",
+    "docker:run:cr-job": ". ./.env && docker run ${JOBS_JOB_DOCKER:-$DOCKER_CR_JOB}",
+    "docker:deploy:cr-job": "run-s docker:build:cr-job docker:push:cr-job",
+    "compose:up": "docker compose up -d",
+    "compose:down": "docker compose down",
+    "compose:logs": "docker compose logs -f",
+    "firestore:show": "pnpm --filter @cloud-run-webrtc-peering/server firestore:show",
+    "firestore:delete": "pnpm --filter @cloud-run-webrtc-peering/server firestore:delete",
+    "ws:test": "pnpm --filter @cloud-run-webrtc-peering/server ws:test",
+    "pulumi:up": "pnpm --filter @cloud-run-webrtc-peering/infra pulumi:up",
+    "pulumi:preview": "pnpm --filter @cloud-run-webrtc-peering/infra pulumi:preview",
+    "pulumi:destroy": "pnpm --filter @cloud-run-webrtc-peering/infra pulumi:destroy"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.17.1",
+  "devDependencies": {
+    "@biomejs/biome": "2.3.8",
+    "npm-run-all2": "^8.0.4",
+    "typescript": "^5.9.3"
+  }
+}

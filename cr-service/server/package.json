@@ -1,0 +1,28 @@
+{
+  "name": "@cloud-run-webrtc-peering/server",
+  "version": "1.0.0",
+  "description": "WebRTC peering server for Cloud Run",
+  "type": "module",
+  "main": "src/main.ts",
+  "scripts": {
+    "dev": "FIRESTORE_EMULATOR_HOST=localhost:8080 GCLOUD_PROJECT=test-project node src/main.ts",
+    "lint": "biome check --write src",
+    "typecheck": "tsc --noEmit",
+    "firestore:show": "FIRESTORE_EMULATOR_HOST=localhost:8080 GCLOUD_PROJECT=test-project node src/scripts/firestore-manage.ts show",
+    "firestore:delete": "FIRESTORE_EMULATOR_HOST=localhost:8080 GCLOUD_PROJECT=test-project node src/scripts/firestore-manage.ts delete",
+    "ws:test": "node src/scripts/ws-test.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/firestore": "^7.11.0",
+    "@hono/node-server": "^1.19.6",
+    "hono": "^4.10.7",
+    "werift": "^0.22.2",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.18.1"
+  }
+}

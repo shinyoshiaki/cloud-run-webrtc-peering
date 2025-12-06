@@ -1,0 +1,21 @@
+{
+  "name": "@cloud-run-webrtc-peering-jobs/infra",
+  "version": "0.1.0",
+  "description": "Pulumi infrastructure for Cloud Run Jobs sample",
+  "type": "module",
+  "private": true,
+  "main": "index.ts",
+  "scripts": {
+    "pulumi:up": "pulumi up -s dev",
+    "pulumi:preview": "pulumi preview -s dev",
+    "pulumi:destroy": "pulumi destroy -s dev"
+  },
+  "dependencies": {
+    "@pulumi/gcp": "^8.41.1",
+    "@pulumi/pulumi": "^3.209.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.1",
+    "typescript": "^5.9.3"
+  }
+}

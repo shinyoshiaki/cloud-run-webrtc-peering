@@ -1,0 +1,22 @@
+{
+  "name": "@cloud-run-webrtc-peering-jobs/job",
+  "version": "0.1.0",
+  "description": "Minimal Cloud Run Job peer that replies with a WebRTC answer",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "FIRESTORE_EMULATOR_HOST=${FIRESTORE_EMULATOR_HOST:-localhost:8080} GCLOUD_PROJECT=${GCLOUD_PROJECT:-test-project} tsx src/index.ts",
+    "start": "tsx src/index.ts",
+    "build": "tsc -p ."
+  },
+  "dependencies": {
+    "@google-cloud/firestore": "^7.11.0",
+    "tslib": "^2.8.1",
+    "werift": "^0.22.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.9.3"
+  }
+}

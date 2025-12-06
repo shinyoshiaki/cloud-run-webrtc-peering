@@ -1,0 +1,24 @@
+{
+  "name": "@cloud-run-webrtc-peering-jobs/service",
+  "version": "0.1.0",
+  "description": "Minimal Cloud Run service that accepts WebRTC offers and starts a job for ticket.md flow",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "AUTO_RUN_LOCAL_JOB=${AUTO_RUN_LOCAL_JOB:-true} FIRESTORE_EMULATOR_HOST=${FIRESTORE_EMULATOR_HOST:-localhost:8080} GCLOUD_PROJECT=${GCLOUD_PROJECT:-test-project} tsx src/index.ts",
+    "build": "tsc -p .",
+    "start": "node --enable-source-maps dist/index.js"
+  },
+  "dependencies": {
+    "@google-cloud/firestore": "^7.11.0",
+    "@hono/node-server": "^1.19.6",
+    "google-auth-library": "^9.15.1",
+    "hono": "^4.10.7",
+    "tslib": "^2.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,3 @@
+packages:
+  - "cr-service/*"
+  - "cr-jobs/*"

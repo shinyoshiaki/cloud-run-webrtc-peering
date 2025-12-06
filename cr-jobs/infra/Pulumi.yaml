@@ -1,0 +1,6 @@
+name: cloud-run-webrtc-peering-jobs
+runtime:
+  name: nodejs
+  options:
+    typescript: true
+description: Cloud Run Jobs sample infrastructure

@@ -1,0 +1,21 @@
+{
+  "name": "@cloud-run-webrtc-peering-jobs/client",
+  "version": "0.1.0",
+  "description": "Node.js sample client that talks to Cloud Run Service and Job using werift",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "SERVICE_URL=${SERVICE_URL:-http://localhost:3000} tsx src/index.ts",
+    "start": "SERVICE_URL=${SERVICE_URL:-https://webrtc-peering-jobs-service-832839441467.asia-northeast1.run.app} tsx src/index.ts",
+    "build": "tsc -p ."
+  },
+  "dependencies": {
+    "tslib": "^2.8.1",
+    "werift": "^0.22.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.9.3"
+  }
+}

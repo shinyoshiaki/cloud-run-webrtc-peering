@@ -1,0 +1,21 @@
+{
+  "name": "@cloud-run-webrtc-peering/infra",
+  "version": "1.0.0",
+  "description": "Pulumi infrastructure for Cloud Run WebRTC Peering",
+  "type": "module",
+  "private": true,
+  "main": "index.ts",
+  "scripts": {
+    "pulumi:up": "pulumi up",
+    "pulumi:preview": "pulumi preview",
+    "pulumi:destroy": "pulumi destroy"
+  },
+  "dependencies": {
+    "@pulumi/gcp": "^8.41.1",
+    "@pulumi/pulumi": "^3.209.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.1",
+    "typescript": "^5.9.3"
+  }
+}

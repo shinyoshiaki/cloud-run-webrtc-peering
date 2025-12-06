@@ -1,0 +1,6 @@
+name: cloud-run-webrtc-peering
+runtime:
+  name: nodejs
+  options:
+    typescript: true
+description: Cloud Run WebRTC Peering Infrastructure

@@ -1,0 +1,5 @@
+config:
+  gcp:project: gcp
+  gcp:region: asia-northeast1
+  cloud-run-webrtc-peering-jobs:serviceImage: image
+  cloud-run-webrtc-peering-jobs:jobImage: image

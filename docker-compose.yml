@@ -1,0 +1,9 @@
+services:
+  firestore-emulator:
+    build:
+      context: .
+      dockerfile: Dockerfile.firestore-emulator
+    ports:
+      - "8080:8080"
+    environment:
+      - FIRESTORE_PROJECT_ID=test-project
