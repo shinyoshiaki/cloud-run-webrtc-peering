@@ -27,22 +27,49 @@ Cloud Run ServiceとCloud Run Jobs を組み合わせた実装。Firestore を�
 
 ## アーキテクチャ
 
-```
-Client --HTTP/WebSocket--> Cloud Run Service
-   |                            |
-   |                        Firestore (シグナリング)
-   |                            |
-   +--------WebRTC P2P----------+
+### cr-service
+
+```mermaid
+graph LR
+    Client((Client))
+    ServiceA[Cloud Run Service<br/>Instance A]
+    ServiceB[Cloud Run Service<br/>Instance B]
+    Firestore[(Firestore)]
+
+    Client -->|WebSocket| ServiceA
+    Client -->|WebSocket| ServiceB
+    ServiceA <-->|offer/answer| Firestore
+    ServiceB <-->|offer/answer| Firestore
+    ServiceA <-.->|WebRTC P2P| ServiceB
 ```
 
-または
+クライアントは WebSocket で Cloud Run Service に接続し、メッセージを送受信します。
+複数の Service インスタンスは Firestore を介してシグナリングを行い、インスタンス間で WebRTC P2P 接続を確立します。
 
+### cr-jobs
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Service as Cloud Run Service
+    participant Firestore
+    participant Job as Cloud Run Job
+
+    Client->>Service: POST /session (offer SDP)
+    Service->>Firestore: save offer
+    Service->>Job: trigger job
+    Job->>Firestore: read offer
+    Job->>Job: create answer
+    Job->>Firestore: save answer
+    Job->>Firestore: delete offer
+    Service->>Firestore: watch answer
+    Firestore-->>Service: answer SDP
+    Service-->>Client: return answer SDP
+    Client<<->>Job: WebRTC P2P DataChannel
 ```
-Client --HTTP--> Cloud Run Service --trigger--> Cloud Run Job
-   |                 |                           |
-   |             Firestore (offers/answers) <----+
-   +--------------------------P2P WebRTC--------------------------+
-```
+
+クライアントは HTTP で offer を送信し、Cloud Run Job が answer を生成します。
+シグナリング完了後、クライアントと Job 間で WebRTC P2P 接続を確立します。
 
 ## 必要な環境
 
@@ -83,102 +110,8 @@ pnpm dev:client
 
 ```bash
 # サービス + ジョブを自動起動
-pnpm --filter @cloud-run-webrtc-peering-jobs/service dev:auto
+pnpm --filter @cloud-run-webrtc-peering-jobs/service dev
 
 # クライアントを実行
-pnpm --filter @cloud-run-webrtc-peering-jobs/client start:local
+pnpm --filter @cloud-run-webrtc-peering-jobs/client dev
 ```
-
-## スクリプト
-
-### 開発
-
-- `pnpm dev` - サーバーを開発モードで起動
-- `pnpm dev:client` - クライアントを開発モードで起動
-- `pnpm build:client` - クライアントをビルド
-- `pnpm lint` - コードをチェック & 自動修正
-
-### Docker
-
-- `pnpm docker:deploy:app` - アプリケーションをビルド & プッシュ
-- `pnpm docker:deploy:cr-service` - CR Service をビルド & プッシュ
-- `pnpm docker:deploy:cr-job` - CR Job をビルド & プッシュ
-
-### Docker Compose
-
-- `pnpm compose:up` - Firestore エミュレータを起動
-- `pnpm compose:down` - Firestore エミュレータを停止
-- `pnpm compose:logs` - ログを表示
-
-### Firestore 管理
-
-- `pnpm firestore:show` - Firestore のデータを表示
-- `pnpm firestore:delete` - Firestore のデータを削除
-
-### インフラストラクチャ
-
-- `pnpm pulumi:preview` - Pulumi 変更をプレビュー
-- `pnpm pulumi:up` - インフラストラクチャをデプロイ
-- `pnpm pulumi:destroy` - インフラストラクチャを削除
-
-## 技術スタック
-
-### フロントエンド
-
-- React 19
-- TypeScript 5
-- Vite 7
-- Tailwind CSS 4
-
-### バックエンド
-
-- Node.js
-- Hono (Web フレームワーク)
-- werift (WebRTC ライブラリ)
-- WebSocket (ws)
-
-### インフラ & ツール
-
-- Google Cloud Run (Service & Jobs)
-- Google Cloud Firestore
-- Pulumi (IaC)
-- Docker
-- Biome (リンター)
-- pnpm (パッケージマネージャー)
-
-## 環境変数
-
-プロジェクトルートに `.env` ファイルを作成してください：
-
-```bash
-# Docker イメージ
-APP_DOCKER=gcr.io/your-project/app
-JOBS_SERVICE_DOCKER=gcr.io/your-project/jobs-service
-JOBS_JOB_DOCKER=gcr.io/your-project/jobs-job
-
-# GCP プロジェクト
-GCLOUD_PROJECT=your-project-id
-
-# ローカル開発（エミュレータ使用時）
-FIRESTORE_EMULATOR_HOST=localhost:8080
-```
-
-## デプロイ
-
-### 1. Docker イメージのビルド & プッシュ
-
-```bash
-pnpm docker:deploy:app
-pnpm docker:deploy:cr-service
-pnpm docker:deploy:cr-job
-```
-
-### 2. Pulumi でインフラをデプロイ
-
-```bash
-pnpm pulumi:up
-```
-
-## ライセンス
-
-ISC
